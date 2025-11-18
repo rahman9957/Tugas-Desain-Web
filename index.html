@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Yayasan - UTS Front End</title>
+  <title>Mutiara Insan</title>
 
-  <!-- Google Font Poppins -->
+  
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ---- Basic reset ---- */
+    
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html,body { height: 100%; }
     body{
@@ -21,7 +21,7 @@
       line-height:1.4;
     }
 
-    /* ---- Layout: centered white long column ---- */
+    
     .wrap {
       width: 100%;
       min-height: 100vh;
@@ -30,14 +30,14 @@
       padding: 40px 20px;
     }
     .container {
-      width: 900px;           /* lebar kolom utama */
-      background: #fff;       /* putih seperti permintaan */
+      width: 900px;           
+      background: #fff;       
       border-radius: 8px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.08);
       overflow:hidden;
     }
 
-    /* ---- Header / Navbar ---- */
+    
     header{
       background: linear-gradient(90deg,#0a4d6d,#0e6b86);
       color: #fff;
@@ -53,15 +53,15 @@
     }
     .nav-item {
       cursor:pointer;
-      font-weight:400; /* default normal */
+      font-weight:400;
       transition: transform .25s ease, font-weight .12s ease;
       position:relative;
       padding:6px 8px;
       color:#fff;
     }
-    /* active (bold) + animation underline */
+    
     .nav-item.active {
-      font-weight:700; /* menjadi tebal saat diklik */
+      font-weight:700; 
     }
     .nav-item::after{
       content:'';
@@ -77,15 +77,15 @@
     }
     .nav-item.active::after{
       transform:scaleX(1);
-      background: rgba(255,255,255,0.95); /* garis tebal putih */
+      background: rgba(255,255,255,0.95); 
     }
 
-    /* ---- Sections ---- */
+    
     section { padding: 36px 48px; min-height: 420px; }
 
     /* Beranda */
     .beranda {
-      background-image: url('backgroundberanda.pg');
+      background-image: url('backgroundberanda.png');
       background-size: cover;
       background-position: center;
       color: #fff;
@@ -152,7 +152,7 @@
       display:block;
       transition: transform .35s ease;
     }
-    /* Active enlarged styling (animasi & lebih besar) */
+    /* gerakan untuk js */
     .donasi-item.enlarged {
       transform: scale(1.07);
       box-shadow: 0 18px 40px rgba(0,0,0,0.25);
@@ -182,7 +182,7 @@
     }
     .galeri .thumb img { width:100%; height:100%; object-fit:cover; display:block;}
 
-    /* Modal / popup for gallery */
+    /*  popup */
     .modal {
       position:fixed;
       inset:0;
@@ -231,7 +231,7 @@
       flex:1;
     }
     .title-yellow {
-      color: #FFBC0F; /* koreksi typo O -> 0 */
+      color: #FFBC0F; 
       font-weight:700;
       font-size:22px;
       margin-bottom:10px;
@@ -244,7 +244,7 @@
     }
     .visi, .misi { margin-top:8px; }
 
-    /* small screens */
+    
     @media (max-width:980px){
       .container { width: 96%; }
       .content-wrap { flex-direction:column; }
@@ -255,7 +255,7 @@
       .donasi-grid { grid-template-columns: 1fr; }
     }
 
-    /* simple fade-in-up animation for some texts */
+    /* gerakan */
     .animate-up {
       opacity:0;
       transform: translateY(10px);
@@ -272,9 +272,9 @@
   <div class="wrap">
     <div class="container">
 
-      <!-- Header + Nav -->
+      <!-- Header-->
       <header>
-        <div class="brand">Yayasan Asa Insan Karomah</div>
+        <div class="brand">LKSA MUTIARA INSAN</div>
         <nav id="mainNav">
           <div class="nav-item active" data-target="beranda">Beranda</div>
           <div class="nav-item" data-target="donasi">Donasi</div>
@@ -303,7 +303,7 @@
         <section id="donasi" class="donasi" style="display:none;">
           <div style="padding:0 24px;">
             <h2 style="font-weight:700; margin-bottom:8px;">Donasi</h2>
-            <p style="margin-bottom:6px;">Klik gambar untuk memperbesar dan memberi animasi.</p>
+            <p style="margin-bottom:6px;">Klik sedekh untuk berdonasi.</p>
           </div>
 
           <div class="donasi-grid" id="donasiGrid">
@@ -371,7 +371,7 @@
 
       </main>
 
-      <!-- Modal for gallery -->
+      
       <div class="modal" id="modalGaleri" aria-hidden="true">
         <div class="modal-body">
           <img src="galeri.png" alt="Galeri besar">
@@ -382,7 +382,7 @@
   </div>
 
   <script>
-    // All JS in the same file as requested.
+    // JavaScript 
     (function(){
       const navItems = document.querySelectorAll('.nav-item');
       const sections = {
@@ -392,7 +392,7 @@
         tentang: document.getElementById('tentang')
       };
 
-      // Utility: show only target section
+      
       function showSection(target){
         for(const key in sections){
           if(key === target) sections[key].style.display = '';
@@ -400,10 +400,10 @@
         }
       }
 
-      // Initialize default (beranda visible)
+      
       showSection('beranda');
 
-      // Nav click behavior: make active (bold) and animate underline via CSS class
+      
       navItems.forEach(item=>{
         item.addEventListener('click', ()=>{
           navItems.forEach(i=> i.classList.remove('active'));
@@ -412,29 +412,28 @@
           const t = item.getAttribute('data-target');
           showSection(t);
 
-          // small animated scroll to top of container
+          
           document.querySelector('.container').scrollTo({ top: 0, behavior: 'smooth' });
         });
       });
 
-      // Donasi image click behavior: enlarge clicked image and animate,
-      // make others back to normal.
+      
       const donasiItems = document.querySelectorAll('.donasi-item');
       donasiItems.forEach(it=>{
         it.addEventListener('click', ()=>{
-          // Toggle enlarged: if already enlarged, shrink back
+          
           const isEnlarged = it.classList.contains('enlarged');
           donasiItems.forEach(i=> i.classList.remove('enlarged'));
           if(!isEnlarged){
             it.classList.add('enlarged');
-            // optional: scroll to center view
+            
             it.scrollIntoView({behavior:'smooth', block:'center'});
           } else {
-            // nothing else
+            
           }
         });
 
-        // small hover effect (desktop)
+        
         it.addEventListener('mouseenter', ()=> {
           it.style.transform = 'scale(1.02)';
         });
@@ -443,16 +442,16 @@
         });
       });
 
-      // Clicking outside of any enlarged item will close enlargement
+      
       document.addEventListener('click', function(e){
         const insideDonasi = e.target.closest('.donasi-item');
-        // if click not inside any donasi and not on nav
+        
         if(!insideDonasi){
           donasiItems.forEach(i=> i.classList.remove('enlarged'));
         }
       });
 
-      // Galeri: open modal
+      
       const galeriThumb = document.getElementById('galeriThumb');
       const modal = document.getElementById('modalGaleri');
       if(galeriThumb){
@@ -461,7 +460,7 @@
           modal.setAttribute('aria-hidden','false');
         });
       }
-      // close modal when clicking outside image
+      
       modal.addEventListener('click', (e)=> {
         if(e.target === modal){
           modal.classList.remove('open');
@@ -469,7 +468,7 @@
         }
       });
 
-      // Keyboard escape to close modal
+      
       document.addEventListener('keydown', (e)=>{
         if(e.key === 'Escape'){
           modal.classList.remove('open');
@@ -477,7 +476,7 @@
         }
       });
 
-      // Small: add entrance animation classes to texts in beranda
+      
       window.addEventListener('load', ()=>{
         document.querySelectorAll('.animate-up').forEach((el,i)=>{
           el.style.animationDelay = (i*0.08) + 's';
