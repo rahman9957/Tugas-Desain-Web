@@ -1,1 +1,491 @@
-!
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Yayasan - UTS Front End</title>
+
+  <!-- Google Font Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---- Basic reset ---- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; }
+    body{
+      font-family: "Poppins", sans-serif;
+      background:#f2f2f2;
+      color: #000;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+
+    /* ---- Layout: centered white long column ---- */
+    .wrap {
+      width: 100%;
+      min-height: 100vh;
+      display:flex;
+      justify-content:center;
+      padding: 40px 20px;
+    }
+    .container {
+      width: 900px;           /* lebar kolom utama */
+      background: #fff;       /* putih seperti permintaan */
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      overflow:hidden;
+    }
+
+    /* ---- Header / Navbar ---- */
+    header{
+      background: linear-gradient(90deg,#0a4d6d,#0e6b86);
+      color: #fff;
+      padding: 18px 28px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .brand { font-weight:800; font-size:18px; letter-spacing:0.6px; }
+    nav {
+      display:flex;
+      gap:14px;
+    }
+    .nav-item {
+      cursor:pointer;
+      font-weight:400; /* default normal */
+      transition: transform .25s ease, font-weight .12s ease;
+      position:relative;
+      padding:6px 8px;
+      color:#fff;
+    }
+    /* active (bold) + animation underline */
+    .nav-item.active {
+      font-weight:700; /* menjadi tebal saat diklik */
+    }
+    .nav-item::after{
+      content:'';
+      position:absolute;
+      left:0; right:0;
+      height:3px;
+      bottom:-6px;
+      background:rgba(255,255,255,0.0);
+      transform:scaleX(0);
+      transform-origin:left;
+      transition: transform .35s cubic-bezier(.2,.9,.3,1), background .2s;
+      border-radius:2px;
+    }
+    .nav-item.active::after{
+      transform:scaleX(1);
+      background: rgba(255,255,255,0.95); /* garis tebal putih */
+    }
+
+    /* ---- Sections ---- */
+    section { padding: 36px 48px; min-height: 420px; }
+
+    /* Beranda */
+    .beranda {
+      background-image: url('backgroundberanda.pg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:flex-start;
+      min-height: 520px;
+      position:relative;
+    }
+    .beranda .overlay {
+      position:absolute; inset:0; background:rgba(0,0,0,0.35);
+    }
+    .beranda .content {
+      position:relative; z-index:2; max-width:720px;
+      padding: 36px 0;
+    }
+    .beranda h1 {
+      font-size:56px;
+      line-height:0.9;
+      font-weight:800;
+      margin-bottom:18px;
+      font-family:"Poppins",sans-serif;
+    }
+    .beranda p {
+      font-size:18px;
+      font-weight:400;
+      max-width:700px;
+    }
+
+    /* Donasi */
+    .donasi {
+      background-image: url('backgroundini.png');
+      background-size: cover;
+      background-position: center;
+      min-height: 520px;
+      padding-top: 42px;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+    .donasi-grid {
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      gap:16px;
+      padding: 0 12px 36px 12px;
+    }
+    .donasi-item {
+      background: rgba(255,255,255,0.95);
+      border-radius:10px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px;
+      transition: transform .35s cubic-bezier(.2,.9,.3,1), box-shadow .25s;
+      cursor:pointer;
+      position:relative;
+    }
+    .donasi-item img {
+      width:100%;
+      height:160px;
+      object-fit:cover;
+      display:block;
+      transition: transform .35s ease;
+    }
+    /* Active enlarged styling (animasi & lebih besar) */
+    .donasi-item.enlarged {
+      transform: scale(1.07);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+      z-index:5;
+    }
+    .donasi-item.enlarged img {
+      transform: scale(1.07);
+    }
+
+    /* Galeri */
+    .galeri {
+      background-image: url('backgroundini.png');
+      background-size: cover;
+      background-position: center;
+      min-height:420px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .galeri .thumb {
+      width:260px;
+      height:180px;
+      border-radius:8px;
+      overflow:hidden;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,0,0,0.12);
+    }
+    .galeri .thumb img { width:100%; height:100%; object-fit:cover; display:block;}
+
+    /* Modal / popup for gallery */
+    .modal {
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,0.6);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      visibility:hidden;
+      opacity:0;
+      transition: opacity .22s ease, visibility .22s ease;
+      z-index:60;
+    }
+    .modal.open { visibility:visible; opacity:1; }
+    .modal .modal-body {
+      max-width:900px;
+      width:92%;
+      background:#fff;
+      border-radius:8px;
+      padding:14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      transform: translateY(10px);
+      transition: transform .3s ease;
+    }
+    .modal.open .modal-body { transform: translateY(0); }
+    .modal img { width:100%; height:auto; display:block; border-radius:6px; }
+
+    /* Tentang Kami */
+    .tentang {
+      background-image: url('backgroundini.png');
+      background-size: cover;
+      background-position: center;
+      color:#000;
+      min-height:520px;
+      padding-bottom:48px;
+    }
+    .content-wrap {
+      display:flex;
+      gap:28px;
+      align-items:flex-start;
+      padding: 24px 12px;
+    }
+    .left, .right {
+      background: rgba(255,255,255,0.95);
+      padding:18px;
+      border-radius:8px;
+      flex:1;
+    }
+    .title-yellow {
+      color: #FFBC0F; /* koreksi typo O -> 0 */
+      font-weight:700;
+      font-size:22px;
+      margin-bottom:10px;
+    }
+    .paragraph {
+      color:#111;
+      font-size:15px;
+      text-align:left;
+      margin-bottom:14px;
+    }
+    .visi, .misi { margin-top:8px; }
+
+    /* small screens */
+    @media (max-width:980px){
+      .container { width: 96%; }
+      .content-wrap { flex-direction:column; }
+      .donasi-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width:520px){
+      .beranda h1 { font-size:36px; }
+      .donasi-grid { grid-template-columns: 1fr; }
+    }
+
+    /* simple fade-in-up animation for some texts */
+    .animate-up {
+      opacity:0;
+      transform: translateY(10px);
+      animation: upFade .7s forwards;
+    }
+    @keyframes upFade {
+      to { opacity:1; transform:translateY(0); }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <div class="container">
+
+      <!-- Header + Nav -->
+      <header>
+        <div class="brand">Yayasan Asa Insan Karomah</div>
+        <nav id="mainNav">
+          <div class="nav-item active" data-target="beranda">Beranda</div>
+          <div class="nav-item" data-target="donasi">Donasi</div>
+          <div class="nav-item" data-target="galeri">Galeri</div>
+          <div class="nav-item" data-target="tentang">Tentang Kami</div>
+        </nav>
+      </header>
+
+      <!-- Sections -->
+      <main>
+
+        <!-- Beranda -->
+        <section id="beranda" class="beranda">
+          <div class="overlay"></div>
+          <div class="content">
+            <h1 class="animate-up">SEDEKAH</h1>
+            <p class="animate-up" style="animation-delay:.12s">
+              Adalah tanda syukur kepada Allah SWT
+              <br>
+              Berikan yang terbaik saat bersedekah, semoga Allah SWT memberi ganti yang terbaik pula dari sedekah yang digunakan.
+            </p>
+          </div>
+        </section>
+
+        <!-- Donasi -->
+        <section id="donasi" class="donasi" style="display:none;">
+          <div style="padding:0 24px;">
+            <h2 style="font-weight:700; margin-bottom:8px;">Donasi</h2>
+            <p style="margin-bottom:6px;">Klik gambar untuk memperbesar dan memberi animasi.</p>
+          </div>
+
+          <div class="donasi-grid" id="donasiGrid">
+            <div class="donasi-item" data-img="donasiatas1.png" title="Donasi 1">
+              <img src="donasiatas1.png" alt="donasiatas1">
+            </div>
+            <div class="donasi-item" data-img="donasiatas2.png" title="Donasi 2">
+              <img src="donasiatas2.png" alt="donasiatas2">
+            </div>
+            <div class="donasi-item" data-img="donasiatas3.png" title="Donasi 3">
+              <img src="donasiatas3.png" alt="donasiatas3">
+            </div>
+            <div class="donasi-item" data-img="donasibawah1.png" title="Donasi 4">
+              <img src="donasibawah1.png" alt="donasibawah1">
+            </div>
+            <div class="donasi-item" data-img="donasibawah2.png" title="Donasi 5">
+              <img src="donasibawah2.png" alt="donasibawah2">
+            </div>
+            <div class="donasi-item" data-img="donasibawah3.png" title="Donasi 6">
+              <img src="donasibawah3.png" alt="donasibawah3">
+            </div>
+          </div>
+        </section>
+
+        <!-- Galeri -->
+        <section id="galeri" class="galeri" style="display:none;">
+          <div class="thumb" id="galeriThumb" title="Buka Galeri">
+            <img src="galeri.png" alt="galeri">
+          </div>
+        </section>
+
+        <!-- Tentang Kami -->
+        <section id="tentang" class="tentang" style="display:none;">
+          <div class="content-wrap">
+            <div class="left">
+              <div class="title-yellow">Latar Belakang</div>
+              <div class="paragraph">
+                Yayasan Asa Insan Karomah ini merupakan organisasi sosial yang melayani pendidikan dan pelatihan ketrampilan (life skill). Organisasi ini didirikan atas dasar keinginan para Pengurus untuk dapat memberikan pendidikan, pembinaan dan pelatihan serta kesejahteraan sosial yang layak tanpa memandang status dan golongan.
+              </div>
+              <div class="paragraph">
+                Keberadaan umat manusia dalam hal IPTEK dan IMTAQ dewasa ini sangat ketinggalan jauh. Hal inilah yang menggugah dan mendorong kami untuk memberikan perhatian kepada mereka melalui sarana pendidikan yang bersistem asrama guna mengurangi kesenjangan tersebut.
+              </div>
+              <div class="paragraph">
+                Dengan telah didirikannya Yayasan Asa Insan Karomah, semoga bisa bermanfaat bagi masyarakat yang kurang mampu. Kami mohon doa dan dukungannya agar kegiatan yang kami program bisa terlaksana.
+              </div>
+            </div>
+
+            <div class="right">
+              <div class="title-yellow">VISI</div>
+              <div class="paragraph">
+                Menjadi yayasan yang mandiri dan profesional demi mewujudkan kesejahteraan umat manusia yang berakhlaqul karimah
+              </div>
+
+              <div style="height:8px"></div>
+
+              <div class="title-yellow">MISI</div>
+              <div class="paragraph">
+                1. Melaksanakan program-program sosial kemanusiaan.<br><br>
+                2. Memberdayakan potensi umat secara optimal agar kesejahteraan lahiriah dan batiniah terpenuhi.<br><br>
+                3. Menciptakan kemandirian yayasan dengan usaha-usaha riil.
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Modal for gallery -->
+      <div class="modal" id="modalGaleri" aria-hidden="true">
+        <div class="modal-body">
+          <img src="galeri.png" alt="Galeri besar">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // All JS in the same file as requested.
+    (function(){
+      const navItems = document.querySelectorAll('.nav-item');
+      const sections = {
+        beranda: document.getElementById('beranda'),
+        donasi: document.getElementById('donasi'),
+        galeri: document.getElementById('galeri'),
+        tentang: document.getElementById('tentang')
+      };
+
+      // Utility: show only target section
+      function showSection(target){
+        for(const key in sections){
+          if(key === target) sections[key].style.display = '';
+          else sections[key].style.display = 'none';
+        }
+      }
+
+      // Initialize default (beranda visible)
+      showSection('beranda');
+
+      // Nav click behavior: make active (bold) and animate underline via CSS class
+      navItems.forEach(item=>{
+        item.addEventListener('click', ()=>{
+          navItems.forEach(i=> i.classList.remove('active'));
+          item.classList.add('active');
+
+          const t = item.getAttribute('data-target');
+          showSection(t);
+
+          // small animated scroll to top of container
+          document.querySelector('.container').scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      // Donasi image click behavior: enlarge clicked image and animate,
+      // make others back to normal.
+      const donasiItems = document.querySelectorAll('.donasi-item');
+      donasiItems.forEach(it=>{
+        it.addEventListener('click', ()=>{
+          // Toggle enlarged: if already enlarged, shrink back
+          const isEnlarged = it.classList.contains('enlarged');
+          donasiItems.forEach(i=> i.classList.remove('enlarged'));
+          if(!isEnlarged){
+            it.classList.add('enlarged');
+            // optional: scroll to center view
+            it.scrollIntoView({behavior:'smooth', block:'center'});
+          } else {
+            // nothing else
+          }
+        });
+
+        // small hover effect (desktop)
+        it.addEventListener('mouseenter', ()=> {
+          it.style.transform = 'scale(1.02)';
+        });
+        it.addEventListener('mouseleave', ()=> {
+          if(!it.classList.contains('enlarged')) it.style.transform = '';
+        });
+      });
+
+      // Clicking outside of any enlarged item will close enlargement
+      document.addEventListener('click', function(e){
+        const insideDonasi = e.target.closest('.donasi-item');
+        // if click not inside any donasi and not on nav
+        if(!insideDonasi){
+          donasiItems.forEach(i=> i.classList.remove('enlarged'));
+        }
+      });
+
+      // Galeri: open modal
+      const galeriThumb = document.getElementById('galeriThumb');
+      const modal = document.getElementById('modalGaleri');
+      if(galeriThumb){
+        galeriThumb.addEventListener('click', ()=> {
+          modal.classList.add('open');
+          modal.setAttribute('aria-hidden','false');
+        });
+      }
+      // close modal when clicking outside image
+      modal.addEventListener('click', (e)=> {
+        if(e.target === modal){
+          modal.classList.remove('open');
+          modal.setAttribute('aria-hidden','true');
+        }
+      });
+
+      // Keyboard escape to close modal
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape'){
+          modal.classList.remove('open');
+          modal.setAttribute('aria-hidden','true');
+        }
+      });
+
+      // Small: add entrance animation classes to texts in beranda
+      window.addEventListener('load', ()=>{
+        document.querySelectorAll('.animate-up').forEach((el,i)=>{
+          el.style.animationDelay = (i*0.08) + 's';
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
